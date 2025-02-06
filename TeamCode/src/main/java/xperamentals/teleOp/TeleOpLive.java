@@ -20,7 +20,7 @@ import xperamentals.controller.servoController;
  * @version 2.0, 12/30/2024
  */
 
-@TeleOp(name = "Example Robot-Centric Teleop", group = "Examples")
+@TeleOp(name = "TeleOpLive", group = "TeleOp")
 public class TeleOpLive extends OpMode {
     private Follower follower;
     private final Pose startPose = new Pose(0, 0, 0);
@@ -28,7 +28,7 @@ public class TeleOpLive extends OpMode {
     private servoController claw = new servoController();
     private static int mode = 0;
     //Added by Nathan Hall
-    private static int leftTriggerPrevious;
+    private static float leftTriggerPrevious = 0;
 
 
 
@@ -76,11 +76,12 @@ public class TeleOpLive extends OpMode {
         //driver 2 controls
 
         //switch mode
-        if(gamepad2.left_trigger > 0 && mode == 0){
+        if(gamepad2.left_trigger > 0 && leftTriggerPrevious == 0 && mode == 0){
             mode = 1;
-        } else if (gamepad2.left_trigger > 0 && mode == 1){
+        } else if (gamepad2.left_trigger > 0 && leftTriggerPrevious == 0 && mode == 1){
             mode = 0;
         }
+        leftTriggerPrevious = gamepad2.left_trigger;
 
         if(mode == 0) {
             //intake claw controls
