@@ -125,7 +125,7 @@ public class TeleOpLive extends OpMode {
 
 
         /* Telemetry Outputs*/
-        claw.servoTelemetry();
+        //claw.servoTelemetry();
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
