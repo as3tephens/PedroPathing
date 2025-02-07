@@ -2,6 +2,8 @@ package xperamentals.controller;
 
 
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -25,7 +27,7 @@ public class servoController {
     private static final double CLAW_OPEN = 1.0;
     private static final double CLAW_CLOSED = 0.0;
 
-    // Claw pitch positions
+    // Claw up and down positions
     private static final double PITCH_UP = 1.0;
     private static final double PITCH_DOWN = 0.0;
 
@@ -56,6 +58,9 @@ public class servoController {
     /**open claw*/
     public void open() {
         clawServo.setPosition(CLAW_OPEN);
+        sleep(250);
+        clawServo.setPosition(INIT_POSE);
+
     }
 
 

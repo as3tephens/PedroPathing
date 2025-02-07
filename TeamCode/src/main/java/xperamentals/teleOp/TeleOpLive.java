@@ -12,7 +12,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 import xperamentals.controller.servoController;
-
+import xperamentals.controller.slideControler;
 /**
  * This is an example teleop that showcases movement and robot-centric driving.
  *
@@ -23,6 +23,7 @@ import xperamentals.controller.servoController;
 @TeleOp(name = "TeleOpLive", group = "TeleOp")
 public class TeleOpLive extends OpMode {
     private Follower follower;
+    private slideControler slides = new slideControler(hardwareMap);
     private final Pose startPose = new Pose(0, 0, 0);
 
     private servoController claw = new servoController();
@@ -47,6 +48,7 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void init_loop() {
+        claw.initServos();
     }
 
     /**
@@ -85,6 +87,9 @@ public class TeleOpLive extends OpMode {
 
         if(mode == 0) {
             //intake claw controls
+
+            //slides controls
+
 
             if (gamepad2.b) {
                 //open claw
