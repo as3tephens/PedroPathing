@@ -6,14 +6,12 @@ import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import androidx.annotation.Nullable;
 
 public class servoController {
     private Telemetry telemetry;
-    private Servo clawServo;       // Servo controlling the claw grip
+    private Servo release;       // Servo controlling the claw grip
     private Servo clawPitch;  // Servo controlling the claw pitch
 
     /** 1800 degree servo*/
@@ -21,7 +19,7 @@ public class servoController {
     /** 300 degree servo*/
     private Servo armPitchL;
     private Servo armClaw;
-    private Servo armPitch;
+    private Servo armRotate;
 
     // Claw positions
     private static final double CLAW_OPEN = 1.0;
@@ -46,27 +44,27 @@ public class servoController {
     private static final double INIT_POSE = 0;
 
 
-    public void ClawController(HardwareMap hardwareMap) {
-        clawServo = hardwareMap.get(Servo.class, "clawServo");
+    public servoController(HardwareMap hardwareMap) {
+        release = hardwareMap.get(Servo.class, "release");
         clawPitch = hardwareMap.get(Servo.class, "clawPitch");
         armPitchL = hardwareMap.get(Servo.class,"armPitchL");
         armPitchR = hardwareMap.get(Servo.class,"armPitchR");
         armClaw = hardwareMap.get(Servo.class,"armClaw");
-        armPitch = hardwareMap.get(Servo.class,"armPitch");
+        armRotate = hardwareMap.get(Servo.class,"armRotate");
     }
 
     /**open claw*/
     public void open() {
-        clawServo.setPosition(CLAW_OPEN);
-        sleep(250);
-        clawServo.setPosition(INIT_POSE);
+        release.setPosition(CLAW_OPEN);
+
+        release.setPosition(INIT_POSE);
 
     }
 
 
     /**close claw*/
     public void close() {
-        clawServo.setPosition(CLAW_CLOSED);
+        release.setPosition(CLAW_CLOSED);
     }
 
     // Pitch the claw up
@@ -100,8 +98,8 @@ public class servoController {
     }
 
     //sets arm pivot to out position
-    public void armPivotOut(){
-        armPitch.setPosition(ARM_PITCH);
+    public void armRotateUp(){
+        armRotate.setPosition(ARM_PITCH);
     }
 
     /**
@@ -116,22 +114,22 @@ public class servoController {
 
     /**intalize all servos*/
     public void initServos(){
-        clawServo.setPosition(INIT_POSE);
+        release.setPosition(INIT_POSE);
         clawPitch.setPosition(INIT_POSE);
         armPitchR.setPosition(INIT_POSE);
         armPitchL.setPosition(INIT_POSE);
         armClaw.setPosition(INIT_POSE);
-        armPitch.setPosition(INIT_POSE);
+        armRotate.setPosition(INIT_POSE);
     }
 
     /**Telemetry class for all servos*/
     public  void servoTelemetry(){
-        telemetry.addData("clawServo: ",clawServo.getPosition());
+        telemetry.addData("clawServo: ",release.getPosition());
         telemetry.addData("clawPitch: ",clawPitch.getPosition());
         telemetry.addData("armPitchR: ",armPitchR.getPosition());
         telemetry.addData("armPitchL: ",armPitchR.getPosition());
         telemetry.addData("armClaw: ",armClaw.getPosition());
-        telemetry.addData("armPitch: ",armPitch.getPosition());
+        telemetry.addData("armPitch: ",armRotate.getPosition());
         telemetry.update();
     }
 

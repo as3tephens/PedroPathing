@@ -26,7 +26,7 @@ public class TeleOpLive extends OpMode {
     private slideControler slides = new slideControler(hardwareMap);
     private final Pose startPose = new Pose(0, 0, 0);
 
-    private servoController claw = new servoController();
+    private servoController claw = new servoController(hardwareMap);
     private static int mode = 0;
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
@@ -127,6 +127,8 @@ public class TeleOpLive extends OpMode {
             }
 
         }
+
+        slides.moveSlides(gamepad2.left_stick_y);
 
 
         /* Telemetry Outputs*/

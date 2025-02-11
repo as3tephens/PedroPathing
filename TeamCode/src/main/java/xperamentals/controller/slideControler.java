@@ -15,7 +15,7 @@ public class slideControler {
     private DcMotor slides;
 
     //init slides
-    public void SlidesControler(HardwareMap hardwareMap){
+    public slideControler(HardwareMap hardwareMap){
         slides = hardwareMap.get(DcMotor.class,"slides");
     }
 
