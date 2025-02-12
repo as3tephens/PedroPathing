@@ -13,9 +13,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class slideControler {
     //Motors varables
     private DcMotor slides;
+    private static HardwareMap hardwareMap;
 
     //init slides
-    public slideControler(HardwareMap hardwareMap){
+    public slideControler(HardwareMap oldhardwareMap){
+        hardwareMap = oldhardwareMap;
         slides = hardwareMap.get(DcMotor.class,"slides");
     }
 

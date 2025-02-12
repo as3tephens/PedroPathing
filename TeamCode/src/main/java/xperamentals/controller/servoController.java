@@ -42,9 +42,11 @@ public class servoController {
 
     //universial init positon
     private static final double INIT_POSE = 0;
+    private static HardwareMap hardwareMap;
 
 
-    public servoController(HardwareMap hardwareMap) {
+    public servoController(HardwareMap oldhardwareMap) {
+        hardwareMap = oldhardwareMap;
         release = hardwareMap.get(Servo.class, "release");
         clawPitch = hardwareMap.get(Servo.class, "clawPitch");
         armPitchL = hardwareMap.get(Servo.class,"armPitchL");
