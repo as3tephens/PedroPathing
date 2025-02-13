@@ -22,7 +22,7 @@ import pedroPathing.constants.LConstants;
 @Autonomous(name = "oneSpecamenPlusPark")
 public class oneSpecPlusPark extends OpMode {
     //defining poses
-    private final servoController servos = new servoController(hardwareMap);
+    private final servoController servos = new servoController(hardwareMap,telemetry);
     private final Pose startPose = new Pose(8.5,64,Math.toRadians(180));
     private final Pose barPose = new Pose(40,67,Math.toRadians(180));
     private final Pose endPose = new Pose(8.64,16.7,Math.toRadians(180));

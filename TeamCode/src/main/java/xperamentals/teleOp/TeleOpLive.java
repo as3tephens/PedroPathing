@@ -23,10 +23,10 @@ import xperamentals.controller.slideControler;
 @TeleOp(name = "TeleOpLive", group = "TeleOp")
 public class TeleOpLive extends OpMode {
     private Follower follower;
-    private slideControler slides = new slideControler(hardwareMap);
+    private slideControler slides;
     private final Pose startPose = new Pose(0, 0, 0);
 
-    private servoController claw = new servoController(hardwareMap);
+    private servoController claw;
     private static int mode = 0;
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
@@ -38,6 +38,9 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void init() {
+        slides  = new slideControler(hardwareMap);
+        claw = new servoController(hardwareMap,telemetry);
+        claw.initServos();
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);

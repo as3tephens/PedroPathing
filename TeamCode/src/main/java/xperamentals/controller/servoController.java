@@ -4,6 +4,7 @@ package xperamentals.controller;
 
 import static java.lang.Thread.sleep;
 
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,11 +23,11 @@ public class servoController {
     private Servo armRotate;
 
     // Claw positions
-    private static final double CLAW_OPEN = 1.0;
+    private static final double CLAW_OPEN = 0.5;
     private static final double CLAW_CLOSED = 0.0;
 
     // Claw up and down positions
-    private static final double PITCH_UP = 1.0;
+    private static final double PITCH_UP = 0.5;
     private static final double PITCH_DOWN = 0.0;
 
     //arm pitch positions
@@ -39,20 +40,22 @@ public class servoController {
 
     //arm pitch positions
     private static final double ARM_PITCH = 0.0;
+    private static final double ARM_SERVO_UP = 0.0;
+    private static final double ARM_SERVO_DOWN = 0.5;
 
     //universial init positon
     private static final double INIT_POSE = 0;
-    private static HardwareMap hardwareMap;
 
 
-    public servoController(HardwareMap oldhardwareMap) {
-        hardwareMap = oldhardwareMap;
-        release = hardwareMap.get(Servo.class, "release");
-        clawPitch = hardwareMap.get(Servo.class, "clawPitch");
-        armPitchL = hardwareMap.get(Servo.class,"armPitchL");
-        armPitchR = hardwareMap.get(Servo.class,"armPitchR");
-        armClaw = hardwareMap.get(Servo.class,"armClaw");
-        armRotate = hardwareMap.get(Servo.class,"armRotate");
+    public servoController(HardwareMap oldhardwareMap, Telemetry telemetry) {
+        telemetry.addData("debug2",oldhardwareMap.toString());
+        release = oldhardwareMap.get(Servo.class,"release");
+        clawPitch = oldhardwareMap.get(Servo.class, "clawPitch");
+        armPitchL = oldhardwareMap.get(Servo.class,"armPitchL");
+        armPitchR = oldhardwareMap.get(Servo.class,"armPitchR");
+        armClaw = oldhardwareMap.get(Servo.class,"armClaw");
+        armRotate = oldhardwareMap.get(Servo.class,"armRotate");
+        armPitchL.setDirection(Servo.Direction.REVERSE);
     }
 
     /**open claw*/
@@ -82,13 +85,21 @@ public class servoController {
     //Pitch the arm to wall pickup position
     public void armWall() {
         pitchArm(ARM_WALL);
+        armRotate.setPosition(ARM_SERVO_UP);
     }
 
     //pitch the arm to high chamber position
     public void armHighChamber(){
         pitchArm(ARM_HIGH_CHAMBER);
+        armRotate.setPosition(ARM_SERVO_DOWN);
     }
-
+//rotate up
+    public void up(){
+        armRotate.setPosition(ARM_SERVO_UP);
+    }
+    public void down(){
+        armRotate.setPosition(ARM_SERVO_DOWN);
+    }
     //open arm claw
     public void armClawOpen() {
         armClaw.setPosition(ARM_CLAW_OPEN);
@@ -117,7 +128,7 @@ public class servoController {
     /**intalize all servos*/
     public void initServos(){
         release.setPosition(INIT_POSE);
-        clawPitch.setPosition(INIT_POSE);
+        clawPitch.setPosition(0.5);
         armPitchR.setPosition(INIT_POSE);
         armPitchL.setPosition(INIT_POSE);
         armClaw.setPosition(INIT_POSE);
@@ -125,14 +136,13 @@ public class servoController {
     }
 
     /**Telemetry class for all servos*/
-    public  void servoTelemetry(){
+    public  void servoTelemetry(Telemetry telemetry){
         telemetry.addData("clawServo: ",release.getPosition());
         telemetry.addData("clawPitch: ",clawPitch.getPosition());
         telemetry.addData("armPitchR: ",armPitchR.getPosition());
         telemetry.addData("armPitchL: ",armPitchR.getPosition());
         telemetry.addData("armClaw: ",armClaw.getPosition());
         telemetry.addData("armPitch: ",armRotate.getPosition());
-        telemetry.update();
     }
 
 }
