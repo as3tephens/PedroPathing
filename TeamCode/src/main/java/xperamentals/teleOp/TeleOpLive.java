@@ -27,6 +27,7 @@ public class TeleOpLive extends OpMode {
     private final Pose startPose = new Pose(0, 0, 0);
 
     private servoController claw;
+    private double rotate = 0.0;
     private static int mode = 0;
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
@@ -79,7 +80,11 @@ public class TeleOpLive extends OpMode {
         follower.update();
 
         //driver 2 controls
-
+if(gamepad2.dpad_left){
+    mode = 1;
+} else if(gamepad2.dpad_right){
+    mode = 0;
+}
         //switch mode
         if(gamepad2.left_trigger > 0 && leftTriggerPrevious == 0 && mode == 0){
             mode = 1;
@@ -97,9 +102,9 @@ public class TeleOpLive extends OpMode {
             if (gamepad2.b) {
                 //open claw
                 claw.open();
-            } else if (gamepad2.a) {
+            } else if (gamepad2.x) {
                 //close claw
-                claw.close();
+                claw.nuteral();
             }
             //pitch claw
             if (gamepad2.left_bumper) {
@@ -119,7 +124,11 @@ public class TeleOpLive extends OpMode {
                 //close claw
                 claw.armClawClose();
             }
-
+            if (gamepad2.dpad_up){
+                rotate +=0.1;
+            } else if (gamepad2.dpad_down){
+                rotate -=0.1;
+            }
             //arm controls
             if (gamepad2.left_bumper){
                 //set arm to high chamber position
@@ -128,14 +137,15 @@ public class TeleOpLive extends OpMode {
                 //set arm to pickup off wall
                 claw.armWall();
             }
-
+            claw.angle(rotate);
         }
 
         slides.moveSlides(gamepad2.left_stick_y);
 
 
         /* Telemetry Outputs*/
-        //claw.servoTelemetry();
+        claw.servoTelemetry(telemetry);
+        telemetry.addData("rotate",rotate);
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));

@@ -54,40 +54,41 @@ public class servoDebug extends LinearOpMode{
                     //pitch up
                     claw.pitchUp();
                 }
-            } else if(mode == 1){
+            } else if(mode == 1) {
                 //specimen claw controls
 
                 //claw controls
-                if (gamepad2.b){
+                if (gamepad2.b) {
                     //open claw
                     claw.armClawOpen();
-                } else if (gamepad2.a){
+                } else if (gamepad2.a) {
                     //close claw
                     claw.armClawClose();
                 }
 
                 //arm controls
-                if (gamepad2.left_bumper){
+                if (gamepad2.left_bumper) {
                     //set arm to high chamber position
-                    pow +=1;
+                    pow += 1;
                     sleep(250);
-                } else if (gamepad2.right_bumper){
+                } else if (gamepad2.right_bumper) {
                     //set arm to pickup off wall
-                    pow -=1;
+                    pow -= 1;
                     sleep(250);
                 }
-                if(gamepad2.dpad_up){
+                if (gamepad2.dpad_up) {
                     claw.up();
-                } else if (gamepad2.dpad_down){
+                } else if (gamepad2.dpad_down) {
                     claw.down();
                 }
+            }
                 claw.pitchArm(pow);
                 telemetry.addData("mode",mode);
                 claw.servoTelemetry(telemetry);
                 telemetry.addData("pow",pow);
                 telemetry.update();
 
-            }
+
         }
     }
 }

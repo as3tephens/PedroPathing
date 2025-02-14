@@ -28,11 +28,11 @@ public class servoController {
 
     // Claw up and down positions
     private static final double PITCH_UP = 0.5;
-    private static final double PITCH_DOWN = 0.0;
+    private static final double PITCH_DOWN = 1;
 
     //arm pitch positions
-    private static final double ARM_WALL = 0.0;
-    private static final double ARM_HIGH_CHAMBER = 1.0;
+    private static final double ARM_WALL = 16;
+    private static final double ARM_HIGH_CHAMBER = 165;
 
     //arm claw positions
     private static final double ARM_CLAW_CLOSED = 0.0;
@@ -62,8 +62,10 @@ public class servoController {
     public void open() {
         release.setPosition(CLAW_OPEN);
 
-        release.setPosition(INIT_POSE);
+    }
 
+    public void nuteral(){
+        release.setPosition(0.5);
     }
 
 
@@ -133,6 +135,9 @@ public class servoController {
         armPitchL.setPosition(INIT_POSE);
         armClaw.setPosition(INIT_POSE);
         armRotate.setPosition(INIT_POSE);
+    }
+    public void angle(double d){
+    armRotate.setPosition(d);
     }
 
     /**Telemetry class for all servos*/
