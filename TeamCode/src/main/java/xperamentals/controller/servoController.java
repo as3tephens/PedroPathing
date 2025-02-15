@@ -48,7 +48,7 @@ public class servoController {
 
 
     public servoController(HardwareMap oldhardwareMap, Telemetry telemetry) {
-        telemetry.addData("debug2",oldhardwareMap.toString());
+        //telemetry.addData("debug2",oldhardwareMap.toString());
         release = oldhardwareMap.get(Servo.class,"release");
         clawPitch = oldhardwareMap.get(Servo.class, "clawPitch");
         armPitchL = oldhardwareMap.get(Servo.class,"armPitchL");
