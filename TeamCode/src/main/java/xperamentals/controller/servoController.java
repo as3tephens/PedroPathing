@@ -21,6 +21,7 @@ public class servoController {
     private Servo armPitchL;
     private Servo armClaw;
     private Servo armRotate;
+    private boolean armClawOpen = false;
 
     // Claw positions
     private static final double CLAW_OPEN = 0.5;
@@ -105,11 +106,17 @@ public class servoController {
     //open arm claw
     public void armClawOpen() {
         armClaw.setPosition(ARM_CLAW_OPEN);
+        armClawOpen = true;
     }
 
     //close arm claw
     public void armClawClose() {
         armClaw.setPosition(ARM_CLAW_CLOSED);
+        armClawOpen = false;
+    }
+    //bolean condition for if claw is open
+    public boolean isArmClawOpen(){
+        return armClawOpen;
     }
 
     //sets arm pivot to out position
