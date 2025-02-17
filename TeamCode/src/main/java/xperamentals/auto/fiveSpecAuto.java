@@ -21,7 +21,7 @@ import pedroPathing.constants.LConstants;
 import xperamentals.controller.servoController;
 import xperamentals.controller.slideControler;
 
-@Autonomous(name = "5 + 0")
+@Autonomous(name = "5 + 0 red")
 public class fiveSpecAuto extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
