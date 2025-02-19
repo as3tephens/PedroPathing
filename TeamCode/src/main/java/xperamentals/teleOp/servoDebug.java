@@ -9,6 +9,7 @@ import xperamentals.controller.servoController;
 @TeleOp(name = "servoDebug")
 public class servoDebug extends LinearOpMode{
     private static int mode = 0;
+    private static double rotate = 0.0;
     private static double pow = 0.0;
     private static double pitch = 0.0;
     private static float leftTriggerPrevious = 0;
@@ -69,22 +70,31 @@ public class servoDebug extends LinearOpMode{
                 //arm controls
                 if (gamepad2.left_bumper) {
                     //set arm to high chamber position
-                    pow += 1;
+                    pow += 10;
                     sleep(250);
                 } else if (gamepad2.right_bumper) {
                     //set arm to pickup off wall
-                    pow -= 1;
+                    pow -= 10/8;
                     sleep(250);
                 }
                 if (gamepad2.dpad_up) {
-                    claw.up();
+                    rotate +=0.1;
+                    sleep(250);
                 } else if (gamepad2.dpad_down) {
-                    claw.down();
+                    rotate -=0.1;
+                    sleep(250);
+                }
+                if(rotate > 1){
+                    rotate = 1;
+                } else if (rotate < 0){
+                    rotate = 0;
                 }
             }
+                claw.up(rotate);
                 claw.pitchArm(pow);
                 telemetry.addData("mode",mode);
                 claw.servoTelemetry(telemetry);
+                telemetry.addData("Rotate:",rotate);
                 telemetry.addData("pow",pow);
                 telemetry.update();
 

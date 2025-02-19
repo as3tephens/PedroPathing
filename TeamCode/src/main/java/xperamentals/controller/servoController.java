@@ -24,7 +24,7 @@ public class servoController {
     private boolean armClawOpen = false;
 
     // Claw positions
-    private static final double CLAW_OPEN = 0.5;
+    private static final double CLAW_OPEN = 1;
     private static final double CLAW_CLOSED = 0.0;
 
     // Claw up and down positions
@@ -32,12 +32,12 @@ public class servoController {
     private static final double PITCH_DOWN = 1;
 
     //arm pitch positions
-    private static final double ARM_WALL = 16;
-    private static final double ARM_HIGH_CHAMBER = 165;
+    private static final double ARM_WALL = 0;
+    private static final double ARM_HIGH_CHAMBER = 190;
 
     //arm claw positions
-    private static final double ARM_CLAW_CLOSED = 0.0;
-    private static final double ARM_CLAW_OPEN = 1.0;
+    private static final double ARM_CLAW_CLOSED = 0.5;
+    private static final double ARM_CLAW_OPEN = 0.0;
 
     //arm pitch positions
     private static final double ARM_PITCH = 0.0;
@@ -97,8 +97,9 @@ public class servoController {
         armRotate.setPosition(ARM_SERVO_DOWN);
     }
 //rotate up
-    public void up(){
-        armRotate.setPosition(ARM_SERVO_UP);
+    public void up(double d){
+        //armRotate.setPosition(ARM_SERVO_UP);
+        armRotate.setPosition(d);
     }
     public void down(){
         armRotate.setPosition(ARM_SERVO_DOWN);

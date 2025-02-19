@@ -105,6 +105,8 @@ if(gamepad2.dpad_left){
             } else if (gamepad2.x) {
                 //close claw
                 claw.nuteral();
+            } else if (gamepad2.a){
+                claw.close();
             }
             //pitch claw
             if (gamepad2.left_bumper) {
@@ -126,6 +128,7 @@ if(gamepad2.dpad_left){
             }
             if (gamepad2.dpad_up){
                 rotate +=0.1;
+
             } else if (gamepad2.dpad_down){
                 rotate -=0.1;
             }
@@ -139,12 +142,17 @@ if(gamepad2.dpad_left){
             }
             claw.angle(rotate);
         }
-
+        if (rotate > 1){
+            rotate = 1;
+        } else if (rotate < 0){
+            rotate = 0;
+        }
         slides.moveSlides(gamepad2.left_stick_y);
 
 
         /* Telemetry Outputs*/
         claw.servoTelemetry(telemetry);
+        telemetry.addData("Mode:",mode);
         telemetry.addData("rotate",rotate);
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
