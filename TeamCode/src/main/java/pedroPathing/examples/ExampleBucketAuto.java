@@ -11,6 +11,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import xperamentals.controller.servoController;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -34,7 +35,7 @@ public class ExampleBucketAuto extends OpMode {
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
     private int pathState;
-
+    private servoController servo;
     /* Create and Define Poses + Paths
      * Poses are built with three constructors: x, y, and heading (in Radians).
      * Pedro uses 0 - 144 for x and y, with 0, 0 being on the bottom left.
@@ -264,6 +265,8 @@ public class ExampleBucketAuto extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        servo = new servoController(hardwareMap,telemetry);
+        servo.pitchUp();
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);

@@ -37,7 +37,7 @@ public class fiveSpecAuto extends OpMode{
                     // Line 1
                     new BezierLine(
                             new Point(135.836, 78.567, Point.CARTESIAN),
-                            new Point(105.308, 74.307, Point.CARTESIAN)
+                            new Point(106, 74.307, Point.CARTESIAN)
                     )
             )
             .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
@@ -48,15 +48,15 @@ public class fiveSpecAuto extends OpMode{
             .addPath(
                     new BezierCurve(
                             new Point(105.190, 74.307, Point.CARTESIAN),
-                            new Point(118.915, 107.083, Point.CARTESIAN),
-                            new Point(84.483, 110.869, Point.CARTESIAN)
+                            new Point(142.5, 97, Point.CARTESIAN),
+                            new Point(86, 110.869, Point.CARTESIAN)
                     )
             )
             .build();
     public static PathChain getPushSamplesInPart2 = builder
             .addPath(
                     new BezierCurve(
-                            new Point(84.483, 110.869, Point.CARTESIAN),
+                            new Point(86, 110.869, Point.CARTESIAN),
                             new Point(76.437, 116.076, Point.CARTESIAN),
                             new Point(86.731, 121.045, Point.CARTESIAN)
                     )
@@ -188,13 +188,13 @@ public class fiveSpecAuto extends OpMode{
 public void autonumousPathUpdate(){
     switch(pathSate){
         case 0:
-            servo.armHighChamber();
+//servo.armHighChamber();
             follower.followPath(spec1);
             setPathState(1);
             break;
         case 1:
             if(!follower.isBusy()) {
-                servo.armClawOpen();
+               // servo.armClawOpen();
                 //the path is broken up so we can put the arm in
                 follower.followPath(pushSamplesInPart1);
                 setPathState(2);
@@ -203,7 +203,7 @@ public void autonumousPathUpdate(){
             break;
         case 2:
             if(!follower.isBusy()){
-                servo.armWall();
+               // servo.armWall();
                 //hold end so we can gram sample
                 follower.followPath(getPushSamplesInPart2, true);
                 setPathState(3);
@@ -211,61 +211,61 @@ public void autonumousPathUpdate(){
             }
         case 3:
             if(!follower.isBusy()){
-                servo.armClawClose();
-                if(!servo.isArmClawOpen()) {
-                    servo.armHighChamber();
+               // servo.armClawClose();
+                //if(!servo.isArmClawOpen()) {
+                   // servo.armHighChamber();
                     follower.followPath(spec2part1);
                     setPathState(4);
                     break;
-                }
+                //}
             }
         case 4:
             if(!follower.isBusy()){
-             servo.armWall();
-             servo.armClawOpen();
+            // servo.armWall();
+            // servo.armClawOpen();
              follower.followPath(spec2Part2,true);
              setPathState(5);
              break;
             }
         case 5:
             if(!follower.isBusy()) {
-                servo.armClawClose();
-                servo.armHighChamber();
+              //  servo.armClawClose();
+              //  servo.armHighChamber();
                 follower.followPath(spec3part1);
                 setPathState(6);
             }
         case 6:
             if (!follower.isBusy()){
-                servo.armClawOpen();
-                servo.armWall();
+                //servo.armClawOpen();
+               // servo.armWall();
                 follower.followPath(spec3part2,true);
                 setPathState(7);
             }
         case 7:
             if(!follower.isBusy()){
-                servo.armClawClose();
-                servo.armHighChamber();
+               // servo.armClawClose();
+                //servo.armHighChamber();
                 follower.followPath(spec4part1);
                 setPathState(8);
             }
         case 8:
             if (!follower.isBusy()){
-                servo.armClawOpen();
-                servo.armWall();
+                //servo.armClawOpen();
+                //servo.armWall();
                 follower.followPath(spec4part2,true);
                 setPathState(9);
             }
         case 9:
             if (!follower.isBusy()){
-                servo.armClawClose();
-                servo.armHighChamber();
+               // servo.armClawClose();
+               // servo.armHighChamber();
                 follower.followPath(spec5part1);
                 setPathState(10);
             }
         case 10:
             if (!follower.isBusy()){
-                servo.armClawOpen();
-                servo.armWall();
+               // servo.armClawOpen();
+                //servo.armWall();
                 slides.moveSlides(1);
                 follower.followPath(spec5part2,true);
             }
@@ -296,6 +296,7 @@ public void autonumousPathUpdate(){
 
     @Override
     public void start(){
+        follower.setMaxPower(0.5);
         opmodeTimer.resetTimer();
         setPathState(0);
     }
