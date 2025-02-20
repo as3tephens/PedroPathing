@@ -30,7 +30,7 @@ import com.pedropathing.util.Timer;
 public class TeleOpLive extends OpMode {
     private Follower follower;
     private slideControler slides;
-    private final Pose startPose = new Pose(0, 0, 0);
+
     private static int pathState = -1;
 
     private servoController claw;
@@ -40,6 +40,7 @@ public class TeleOpLive extends OpMode {
     public static PathBuilder builder = new PathBuilder();
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
+    public static final Pose startPose = new Pose(115,115.2,Math.toRadians(25));
     public static PathChain specPart1 = builder
     .addPath(
         //to chambers
@@ -129,6 +130,8 @@ public class TeleOpLive extends OpMode {
         */
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+        //follower.setMaxPower(0.5);
+
         follower.update();
 
         //driver 2 controls

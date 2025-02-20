@@ -32,7 +32,7 @@ public class servoController {
     private static final double PITCH_DOWN = 1;
 
     //arm pitch positions
-    private static final double ARM_WALL = 0;
+    private static final double ARM_WALL = 35;
     private static final double ARM_HIGH_CHAMBER = 190;
 
     //arm claw positions

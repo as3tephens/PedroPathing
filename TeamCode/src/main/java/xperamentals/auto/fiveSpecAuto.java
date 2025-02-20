@@ -30,17 +30,30 @@ public class fiveSpecAuto extends OpMode{
     public static PathBuilder builder = new PathBuilder();
     private servoController servo;
     private slideControler slides;
-    private final Pose startPose = new Pose(135.836,78.567);
+    private final Pose startPose = new Pose(135.836,78.567,Math.toRadians(90));
 
     public static PathChain spec1 = builder
             .addPath(
-                    // Line 1
                     new BezierLine(
                             new Point(135.836, 78.567, Point.CARTESIAN),
-                            new Point(106, 74.307, Point.CARTESIAN)
+                            new Point(124.948, 77.095, Point.CARTESIAN)
                     )
             )
-            .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+            .setConstantHeadingInterpolation(Math.toRadians(90))
+            .addPath(
+                    new BezierLine(
+                            new Point(124.948, 77.095, Point.CARTESIAN),
+                            new Point(113.649, 75.545, Point.CARTESIAN)
+                    )
+            )
+            .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
+            .addPath(
+                    new BezierLine(
+                            new Point(113.649, 75.545, Point.CARTESIAN),
+                            new Point(105.308, 74.307, Point.CARTESIAN)
+                    )
+            )
+            .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
     /**push the samples into obser*/
@@ -48,32 +61,31 @@ public class fiveSpecAuto extends OpMode{
             .addPath(
                     new BezierCurve(
                             new Point(105.190, 74.307, Point.CARTESIAN),
-                            new Point(142.5, 97, Point.CARTESIAN),
-                            new Point(86, 110.869, Point.CARTESIAN)
+                            new Point(170, 81.6, Point.CARTESIAN),
+                            new Point(86.7, 114, Point.CARTESIAN)
                     )
             )
-            .build();
-    public static PathChain getPushSamplesInPart2 = builder
+            .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+
             .addPath(
-                    new BezierCurve(
-                            new Point(86, 110.869, Point.CARTESIAN),
-                            new Point(76.437, 116.076, Point.CARTESIAN),
-                            new Point(86.731, 121.045, Point.CARTESIAN)
+                    new BezierLine(
+                            new Point(84.483, 110.869, Point.CARTESIAN),
+                            new Point(86.700, 119.000, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
 
             .addPath(
                     new BezierLine(
-                            new Point(86.731, 121.045, Point.CARTESIAN),
-                            new Point(130.866, 120.454, Point.CARTESIAN)
+                            new Point(86.700, 119.000, Point.CARTESIAN),
+                            new Point(130.800, 120.454, Point.CARTESIAN)
                     )
             )
             .setTangentHeadingInterpolation()
 
             .addPath(
                     new BezierCurve(
-                            new Point(130.866, 120.454, Point.CARTESIAN),
+                            new Point(130.800, 120.454, Point.CARTESIAN),
                             new Point(92.056, 113.591, Point.CARTESIAN),
                             new Point(87.323, 128.145, Point.CARTESIAN)
                     )
@@ -92,14 +104,16 @@ public class fiveSpecAuto extends OpMode{
                     new BezierCurve(
                             new Point(130.511, 130.038, Point.CARTESIAN),
                             new Point(81.880, 120.454, Point.CARTESIAN),
-                            new Point(86.731, 134.8, Point.CARTESIAN)
+                            new Point(86.731, 136.072, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
+
+
             .addPath(
                     new BezierLine(
-                            new Point(86.731, 134.8, Point.CARTESIAN),
-                            new Point(130.393, 134.8, Point.CARTESIAN)
+                            new Point(86.731, 136.072, Point.CARTESIAN),
+                            new Point(130.393, 136.072, Point.CARTESIAN)
                     )
             )
             .setTangentHeadingInterpolation()
@@ -176,10 +190,10 @@ public class fiveSpecAuto extends OpMode{
             .addPath(
                     new BezierLine(
                             new Point(105.500, 84.100, Point.CARTESIAN),
-                            new Point(132.600, 115.200, Point.CARTESIAN)
+                            new Point(115, 115.200, Point.CARTESIAN)
                     )
             )
-            .setConstantHeadingInterpolation(Math.toRadians(0))
+            .setConstantHeadingInterpolation(Math.toRadians(25))
             .build();
     public void setPathState(int pState){
         pathSate = pState;
@@ -197,7 +211,7 @@ public void autonumousPathUpdate(){
                // servo.armClawOpen();
                 //the path is broken up so we can put the arm in
                 follower.followPath(pushSamplesInPart1);
-                setPathState(2);
+                setPathState(3);
                 break;
             }
             break;
@@ -205,9 +219,9 @@ public void autonumousPathUpdate(){
             if(!follower.isBusy()){
                // servo.armWall();
                 //hold end so we can gram sample
-                follower.followPath(getPushSamplesInPart2, true);
-                setPathState(3);
-                break;
+                //follower.followPath(getPushSamplesInPart2, true);
+                //setPathState(3);
+                //break;
             }
         case 3:
             if(!follower.isBusy()){

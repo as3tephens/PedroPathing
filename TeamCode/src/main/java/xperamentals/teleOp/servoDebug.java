@@ -74,7 +74,7 @@ public class servoDebug extends LinearOpMode{
                     sleep(250);
                 } else if (gamepad2.right_bumper) {
                     //set arm to pickup off wall
-                    pow -= 10/8;
+                    pow -= 10;
                     sleep(250);
                 }
                 if (gamepad2.dpad_up) {
