@@ -56,7 +56,7 @@ public class servoController {
         armPitchR = oldhardwareMap.get(Servo.class,"armPitchR");
         armClaw = oldhardwareMap.get(Servo.class,"armClaw");
         armRotate = oldhardwareMap.get(Servo.class,"armRotate");
-        armPitchL.setDirection(Servo.Direction.REVERSE);
+        armPitchR.setDirection(Servo.Direction.REVERSE);
     }
 
     /**open claw*/
@@ -131,8 +131,8 @@ public class servoController {
      */
 
     public void pitchArm(double d) {
-        armPitchR.setPosition(d/1800);
-        armPitchL.setPosition(d/300);
+        armPitchR.setPosition(d/270);
+        armPitchL.setPosition(d/270);
     }
 
     /**intalize all servos*/

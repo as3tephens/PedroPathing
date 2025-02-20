@@ -4,6 +4,8 @@ import android.provider.SyncStateContract;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.util.Constants;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,6 +15,10 @@ import pedroPathing.constants.LConstants;
 
 import xperamentals.controller.servoController;
 import xperamentals.controller.slideControler;
+import com.pedropathing.pathgen.PathBuilder;
+import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Timer;
+
 /**
  * This is an example teleop that showcases movement and robot-centric driving.
  *
@@ -30,6 +36,8 @@ public class TeleOpLive extends OpMode {
     private servoController claw;
     private double rotate = 0.0;
     private static int mode = 0;
+    private Timer pathTimer, actionTimer, opmodeTimer;
+    public static PathBuilder builder = new PathBuilder();
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
     public static PathChain specPart1 = builder
@@ -40,35 +48,36 @@ public class TeleOpLive extends OpMode {
             new Point(105.5, 80.400, Point.CARTESIAN)
             )
         )
-    .setLinerHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-    .buid();
+    .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
+    .build();
 
     //go back to observation
     public static PathChain specPart2 = builder
     //go to observaiton
         .addPath(
             new BezierLine(
-                new Point(101.5, 80.400, Point.CARTESIAN)
+                new Point(101.5, 80.400, Point.CARTESIAN),
                 new Point(132.600, 115.20, Point.CARTESIAN)
             )
     )
-    .setLinerHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
+    .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
     .build();
 
-    public void PathUpdare(){
-        switch(pathState)
+    public void PathUpdare() {
+        switch (pathState) {
             case 0:
-                    claw.armHighChamber();
-                    follower.followPath(specPart1);
-                    setPathState(1);
-                    break;
-                case 1:
-                    if(!follower.isBusy()){
-                    follower.followPaht(specPart2);
-                        claw.armWall();
-                        setPathState(-1);
-                    }
-            }                    
+                claw.armHighChamber();
+                follower.followPath(specPart1);
+                setPathState(1);
+                break;
+            case 1:
+                if (!follower.isBusy()) {
+                    follower.followPath(specPart2);
+                    claw.armWall();
+                    setPathState(-1);
+                }
+        }
+    }
         public void setPathState(int pState){
             pathState = pState;
             pathTimer.resetTimer();
@@ -199,7 +208,7 @@ if(gamepad2.dpad_left){
 
 
         /* Telemetry Outputs*/
-        telemetry.addData("pathState:",Pathstate);
+        telemetry.addData("pathState:",pathState);
         claw.servoTelemetry(telemetry);
         telemetry.addData("Mode:",mode);
         telemetry.addData("rotate",rotate);
