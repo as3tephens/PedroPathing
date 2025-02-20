@@ -25,13 +25,56 @@ public class TeleOpLive extends OpMode {
     private Follower follower;
     private slideControler slides;
     private final Pose startPose = new Pose(0, 0, 0);
+    private static int pathState = -1;
 
     private servoController claw;
     private double rotate = 0.0;
     private static int mode = 0;
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
+    public static PathChain specPart1 = builder
+    .addPath(
+        //to chambers
+        new BezierLine(
+            new Point(132.600, 115.200, Point.CARTESIAN),
+            new Point(105.5, 80.400, Point.CARTESIAN)
+            )
+        )
+    .setLinerHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
+    .buid();
 
+    //go back to observation
+    public static PathChain specPart2 = builder
+    //go to observaiton
+        .addPath(
+            new BezierLine(
+                new Point(101.5, 80.400, Point.CARTESIAN)
+                new Point(132.600, 115.20, Point.CARTESIAN)
+            )
+    )
+    .setLinerHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
+    .build();
+
+    public void PathUpdare(){
+        switch(pathState)
+            case 0:
+                    claw.armHighChamber();
+                    follower.followPath(specPart1);
+                    setPathState(1);
+                    break;
+                case 1:
+                    if(!follower.isBusy()){
+                    follower.followPaht(specPart2);
+                        claw.armWall();
+                        setPathState(-1);
+                    }
+            }                    
+        public void setPathState(int pState){
+            pathState = pState;
+            pathTimer.resetTimer();
+        }
+        
+            
 
 
     /**
@@ -149,8 +192,14 @@ if(gamepad2.dpad_left){
         }
         slides.moveSlides(gamepad2.left_stick_y);
 
+        /**auto place spec on high chamber*/
+        if (gamepad1.b){
+            setPathState(0);
+        }
+
 
         /* Telemetry Outputs*/
+        telemetry.addData("pathState:",Pathstate);
         claw.servoTelemetry(telemetry);
         telemetry.addData("Mode:",mode);
         telemetry.addData("rotate",rotate);
