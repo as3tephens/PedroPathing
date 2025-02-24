@@ -47,7 +47,6 @@ android {
         }
     }
 
-
     defaultConfig {
         signingConfig signingConfigs.debug
         applicationId 'com.qualcomm.ftcrobotcontroller'
@@ -90,14 +89,16 @@ android {
             signingConfig signingConfigs.release
 
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a"
+                //noinspection ChromeOsAbiSupport
+                abiFilters "armeabi-v7a"
             }
         }
         debug {
             debuggable true
             jniDebuggable true
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a"
+                //noinspection ChromeOsAbiSupport
+                abiFilters "armeabi-v7a"
             }
         }
     }
@@ -106,7 +107,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     ndkVersion '21.3.6528147'
 }
 

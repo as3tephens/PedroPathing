@@ -7,11 +7,15 @@ import static java.lang.Thread.sleep;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.arcrobotics.ftclib.util.Timing;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class servoController {
     private Telemetry telemetry;
+    private Timing time;
+    private ElapsedTime timer = new ElapsedTime();
     private Servo release;       // Servo controlling the claw grip
     private Servo clawPitch;  // Servo controlling the claw pitch
 
@@ -24,7 +28,7 @@ public class servoController {
     private boolean armClawOpen = false;
 
     // Claw positions
-    private static final double CLAW_OPEN = 1;
+    private static final double CLAW_OPEN = 0.5;
     private static final double CLAW_CLOSED = 0.0;
 
     // Claw up and down positions
@@ -57,6 +61,7 @@ public class servoController {
         armClaw = oldhardwareMap.get(Servo.class,"armClaw");
         armRotate = oldhardwareMap.get(Servo.class,"armRotate");
         armPitchR.setDirection(Servo.Direction.REVERSE);
+        time = new Timing();
     }
 
     /**open claw*/
@@ -71,6 +76,10 @@ public class servoController {
 
 
     /**close claw*/
+    public void armClawPower(double d){
+        armClaw.setPosition(d/300
+        );
+    }
     public void close() {
         release.setPosition(CLAW_CLOSED);
     }
@@ -87,13 +96,20 @@ public class servoController {
 
     //Pitch the arm to wall pickup position
     public void armWall() {
+        timer.reset();
         pitchArm(ARM_WALL);
-        armRotate.setPosition(ARM_SERVO_UP);
+        if (timer.time() > 0.5){
+            armClawOpen();
+        }
     }
 
     //pitch the arm to high chamber position
-    public void armHighChamber(){
-        pitchArm(ARM_HIGH_CHAMBER);
+    public void armHighChamber() {
+        timer.reset();
+        armClawClose();
+        if(timer.time() > 0.5){
+            pitchArm(ARM_HIGH_CHAMBER);
+        }
         armRotate.setPosition(ARM_SERVO_DOWN);
     }
 //rotate up
@@ -106,13 +122,13 @@ public class servoController {
     }
     //open arm claw
     public void armClawOpen() {
-        armClaw.setPosition(ARM_CLAW_OPEN);
+        armClawPower(0);
         armClawOpen = true;
     }
 
     //close arm claw
     public void armClawClose() {
-        armClaw.setPosition(ARM_CLAW_CLOSED);
+armClawPower(180);
         armClawOpen = false;
     }
     //bolean condition for if claw is open
@@ -150,6 +166,7 @@ public class servoController {
 
     /**Telemetry class for all servos*/
     public  void servoTelemetry(Telemetry telemetry){
+        telemetry.addData("timer",timer);
         telemetry.addData("clawServo: ",release.getPosition());
         telemetry.addData("clawPitch: ",clawPitch.getPosition());
         telemetry.addData("armPitchR: ",armPitchR.getPosition());

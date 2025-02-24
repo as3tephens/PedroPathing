@@ -11,6 +11,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ServoController;
 
@@ -21,6 +22,7 @@ import pedroPathing.constants.LConstants;
 import xperamentals.controller.servoController;
 import xperamentals.controller.slideControler;
 
+@Disabled
 @Autonomous(name = "5 + 0 red")
 public class fiveSpecAuto extends OpMode{
     private Follower follower;
@@ -292,7 +294,7 @@ public void autonumousPathUpdate(){
     servo.initServos();
 
     //init slides
-        slides = new slideControler(hardwareMap);
+        slides = new slideControler(hardwareMap,telemetry);
 
 
     //init pedro things

@@ -2,6 +2,13 @@ package xperamentals.teleOp;
 
 import android.provider.SyncStateContract;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ScheduleCommand;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
@@ -18,6 +25,12 @@ import xperamentals.controller.slideControler;
 import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import xperamentals.command.commands.*;
+import xperamentals.command.comandGroups.SequentialCommandGroup.*;
+import xperamentals.subsystem.*;
 
 /**
  * This is an example teleop that showcases movement and robot-centric driving.
@@ -29,18 +42,27 @@ import com.pedropathing.util.Timer;
 @TeleOp(name = "TeleOpLive", group = "TeleOp")
 public class TeleOpLive extends OpMode {
     private Follower follower;
-    private slideControler slides;
 
     private static int pathState = -1;
+    private DcMotorEx slides;
+    public static double p = 0.004, i = 0, d = 0.00001;
+    public static int target = 0;
+    private PIDController controller;
 
     private servoController claw;
     private double rotate = 0.0;
     private static int mode = 0;
+    private arm arm;
+    private claw claws;
+    private GamepadEx toolOp;
+    private intake intake;
+    private slide slide;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    public static PathBuilder builder = new PathBuilder();
+  //  public static PathBuilder builder = new PathBuilder();
     //Added by Nathan Hall
     private static float leftTriggerPrevious = 0;
     public static final Pose startPose = new Pose(115,115.2,Math.toRadians(25));
+ /**
     public static PathChain specPart1 = builder
     .addPath(
         //to chambers
@@ -84,7 +106,7 @@ public class TeleOpLive extends OpMode {
             pathTimer.resetTimer();
         }
         
-            
+      */
 
 
     /**
@@ -92,12 +114,18 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void init() {
-        slides  = new slideControler(hardwareMap);
+        slide = new slide(hardwareMap,"mane");
+        arm = new arm(hardwareMap,"sld");
+        toolOp = new GamepadEx(gamepad2);
+        claws = new claw(hardwareMap,"telemetry");
+        intake = new intake(hardwareMap,"get in my belly");
+        controller = new PIDController(p,i,d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         claw = new servoController(hardwareMap,telemetry);
-        claw.initServos();
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+        CommandScheduler.getInstance().schedule(new retractSlides(slide));
     }
 
     /**
@@ -105,7 +133,9 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void init_loop() {
-        claw.initServos();
+
+     // new  ScheduleCommand(new retractSlides(slide));
+    CommandScheduler.getInstance().run();
     }
 
     /**
@@ -132,88 +162,41 @@ public class TeleOpLive extends OpMode {
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         //follower.setMaxPower(0.5);
 
+
         follower.update();
 
         //driver 2 controls
-if(gamepad2.dpad_left){
-    mode = 1;
-} else if(gamepad2.dpad_right){
-    mode = 0;
-}
-        //switch mode
-        if(gamepad2.left_trigger > 0 && leftTriggerPrevious == 0 && mode == 0){
-            mode = 1;
-        } else if (gamepad2.left_trigger > 0 && leftTriggerPrevious == 0 && mode == 1){
-            mode = 0;
-        }
-        leftTriggerPrevious = gamepad2.left_trigger;
-
-        if(mode == 0) {
             //intake claw controls
-
+            toolOp.getGamepadButton(GamepadKeys.Button.B)
+                            .whenPressed(new ejectSample(arm,intake));
             //slides controls
-
-
-            if (gamepad2.b) {
-                //open claw
-                claw.open();
-            } else if (gamepad2.x) {
-                //close claw
-                claw.nuteral();
-            } else if (gamepad2.a){
-                claw.close();
-            }
             //pitch claw
-            if (gamepad2.left_bumper) {
-                claw.pitchDown();
-            } else if (gamepad2.right_bumper) {
-                //pitch up
-                claw.pitchUp();
-            }
-        } else if(mode == 1){
+            toolOp.getGamepadButton(GamepadKeys.Button.Y)
+                            .whenHeld(new lowerClaw(intake));
+            toolOp.getGamepadButton(GamepadKeys.Button.Y)
+                            .whenInactive(new raseClaw(intake));
             //specimen claw controls
 
-            //claw controls
-            if (gamepad2.b){
-                //open claw
-                claw.armClawOpen();
-            } else if (gamepad2.a){
-                //close claw
-                claw.armClawClose();
-            }
-            if (gamepad2.dpad_up){
-                rotate +=0.1;
-
-            } else if (gamepad2.dpad_down){
-                rotate -=0.1;
-            }
             //arm controls
-            if (gamepad2.left_bumper){
-                //set arm to high chamber position
-                claw.armHighChamber();
-            } else if (gamepad2.right_bumper){
-                //set arm to pickup off wall
-                claw.armWall();
-            }
-            claw.angle(rotate);
-        }
-        if (rotate > 1){
-            rotate = 1;
-        } else if (rotate < 0){
-            rotate = 0;
-        }
-        slides.moveSlides(gamepad2.left_stick_y);
+            toolOp.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                    .whenPressed(new closeClawAndArmChamber(arm,claws));
+
+            toolOp.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                    .whenPressed(new armWallAndOpenClaw(arm,claws));
+            toolOp.getGamepadButton(GamepadKeys.Button.A)
+                    .whenPressed(new extendSlides(slide));
+            toolOp.getGamepadButton(GamepadKeys.Button.X)
+                    .whenPressed(new retractSlides(slide));
 
         /**auto place spec on high chamber*/
-        if (gamepad1.b){
-            setPathState(0);
-        }
-
+       // if (gamepad1.b){
+      //      setPathState(0);
+       // }
+        CommandScheduler.getInstance().run();
 
         /* Telemetry Outputs*/
         telemetry.addData("pathState:",pathState);
         claw.servoTelemetry(telemetry);
-        telemetry.addData("Mode:",mode);
         telemetry.addData("rotate",rotate);
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
@@ -229,5 +212,11 @@ if(gamepad2.dpad_left){
      **/
     @Override
     public void stop() {
+        ElapsedTime time = new ElapsedTime();
+        target = 0;
+        if(time.equals(5)){
+            target = 0;
+        }
+
     }
 }
