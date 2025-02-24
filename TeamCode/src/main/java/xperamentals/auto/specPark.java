@@ -1,4 +1,6 @@
 package xperamentals.auto;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ScheduleCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.follower.Follower;
@@ -19,12 +21,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
+import xperamentals.command.comandGroups.SequentialCommandGroup.armWallAndOpenClaw;
+import xperamentals.command.commands.armChamber;
+import xperamentals.command.commands.armClawClose;
 import xperamentals.controller.servoController;
 import xperamentals.controller.slideControler;
+import xperamentals.subsystem.*;
 
 @Autonomous(name = "barPark")
 public class specPark extends OpMode{
     private static servoController servo;
+    private claw claw;
+    private arm arm;
+
     private Follower follower;
 
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -85,7 +94,8 @@ public class specPark extends OpMode{
         switch(pathState)
         {
             case 0:
-                servo.armHighChamber();
+                //servo.armHighChamber();
+                CommandScheduler.getInstance().schedule(new armChamber(arm));
                 follower.followPath(line1);
                 setPathState(1);
                 break;
@@ -100,15 +110,17 @@ public class specPark extends OpMode{
             case 2:
                 if(!follower.isBusy())
                 {
-                    follower.followPath(line3);
+                    follower.followPath(line3,true);
                     setPathState(3);
                     break;
                 }
             case 3:
                 if(!follower.isBusy())
                 {
-                    servo.armWall();
-                    servo.armClawOpen();
+                    //servo.armWall();
+                   // servo.armClawOpen()
+                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    CommandScheduler.getInstance().run();
                     follower.followPath(line4,true);
                     setPathState(-1);
                     break;
@@ -120,13 +132,16 @@ public class specPark extends OpMode{
     public void init()
     {
         //Servo initialize//
-        servo = new servoController(hardwareMap, telemetry);
-        servo.initServos();
+       // servo = new servoController(hardwareMap, telemetry);
+       // servo.initServos();
 
         //Follower hardware map//
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+        claw = new claw(hardwareMap,"s");
+        arm = new arm(hardwareMap,"s");
+        CommandScheduler.getInstance().schedule(new armClawClose(claw));
 
         //Timers//
         pathTimer = new Timer();
@@ -151,9 +166,10 @@ public class specPark extends OpMode{
         //movement yap bullshit//
         follower.update();
         autonumousPathUpdate();
+        CommandScheduler.getInstance().run();
 
         //telemetry//
-        servo.servoTelemetry(telemetry);
+       // servo.servoTelemetry(telemetry);
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

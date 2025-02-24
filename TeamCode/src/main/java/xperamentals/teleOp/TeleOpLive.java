@@ -159,7 +159,7 @@ public class TeleOpLive extends OpMode {
         - Robot-Centric Mode: true
         */
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         //follower.setMaxPower(0.5);
 
 
@@ -180,6 +180,8 @@ public class TeleOpLive extends OpMode {
             //arm controls
             toolOp.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                     .whenPressed(new closeClawAndArmChamber(arm,claws));
+            toolOp.getGamepadButton((GamepadKeys.Button.DPAD_UP))
+                            .whenActive(new armWall(arm));
 
             toolOp.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                     .whenPressed(new armWallAndOpenClaw(arm,claws));

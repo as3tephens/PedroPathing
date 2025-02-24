@@ -31,6 +31,10 @@ public class arm extends SubsystemBase {
     public void nuteral(){
         release.setPosition(0.5);
     }
+    public void moveArm(double angle){
+        armPitchR.setPosition(angle / 270);
+        armPitchL.setPosition(angle / 270);
+    }
 
     @Override
     public void periodic(){

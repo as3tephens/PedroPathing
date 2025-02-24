@@ -19,7 +19,7 @@ public class lowerClaw extends CommandBase {
     }
     @Override
     public boolean isFinished(){
-        sleep(1000);
+        //sleep(1000);
         return true;
     }
 }

@@ -1,7 +1,10 @@
 package xperamentals.auto;
 
+import static android.os.SystemClock.sleep;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
@@ -13,6 +16,11 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import xperamentals.command.comandGroups.SequentialCommandGroup.armWallAndOpenClaw;
+import xperamentals.subsystem.*;
+
+import xperamentals.command.commands.armChamber;
 import xperamentals.controller.servoController;
 
 
@@ -28,6 +36,8 @@ public class oneSpecPlusPark extends OpMode {
     private final Pose endPose = new Pose(8.64,16.7,Math.toRadians(180));
     private Path bar1;
     private Path park;
+    private arm arm;
+    private claw claw;
 
     //making follower
     private Follower follower;
@@ -48,16 +58,18 @@ public class oneSpecPlusPark extends OpMode {
                 follower.followPath(bar1);
                 setPathState(1);
                 //set arm position
-                servos.armHighChamber();
+                //servos.armHighChamber();
+                CommandScheduler.getInstance().schedule(new armChamber(arm));
                 break;
             case 1:
                 if(!follower.isBusy()){
                     //open claw
-                    servos.armClawOpen();
+                    //servos.armClawOpen();
 
                     //put arm in robot
-                    servos.armWall();
-
+                    //servos.armWall();
+                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    sleep(500);
                     follower.followPath(park);
                     setPathState(-1);
                 }
@@ -69,6 +81,8 @@ public class oneSpecPlusPark extends OpMode {
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+        claw = new claw(hardwareMap,"s");
+        arm = new arm(hardwareMap,"a");
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
@@ -84,6 +98,7 @@ public class oneSpecPlusPark extends OpMode {
     public void loop() {
         follower.update();
         autonomousPathUpdate();
+        CommandScheduler.getInstance().run();
 
 
         //telemetry
