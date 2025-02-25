@@ -1,56 +1,54 @@
 package xperamentals.OpenCV.pipelines;
 
 import org.opencv.core.*;
-import java.util.ArrayList;
+import java.util.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class blueSample extends OpenCvPipeline {
 
-    public Scalar lowerRGBA = new Scalar(0.0, 0.0, 98.0, 0.0);
-    public Scalar upperRGBA = new Scalar(82.0, 255.0, 255.0, 255.0);
-    private Mat rgbaBinaryMat = new Mat();
+	public Scalar lowerRGBA = new Scalar(0.0, 0.0, 98.0, 0.0);
+	public Scalar upperRGBA = new Scalar(82.0, 255.0, 255.0, 255.0);
+	private Mat rgbaBinaryMat = new Mat();
 
-    private ArrayList<MatOfPoint> contours = new ArrayList<>();
-    private Mat hierarchy = new Mat();
+	private ArrayList<MatOfPoint> contours = new ArrayList<>();
+	private Mat hierarchy = new Mat();
 
-    public Scalar lineColor = new Scalar(0.0, 255.0, 255.0, 0.0);
-    public int lineThickness = 1;
+	private MatOfPoint2f contours2f = new MatOfPoint2f();
+	private ArrayList<RotatedRect> contoursRotRects = new ArrayList<>();
 
-    private Mat inputContours = new Mat();
+	public Scalar lineColor = new Scalar(0.0, 255.0, 255.0, 0.0);
+	public int lineThickness = 2;
 
-    private MatOfPoint2f approxPolyDp = new MatOfPoint2f();
-    private MatOfPoint2f approxPolyDp2f = new MatOfPoint2f();
-    private MatOfPoint2f contours2f = new MatOfPoint2f();
-    private ArrayList<MatOfPoint> filteredRectangleContours = new ArrayList<>();
+	private Mat inputRotRects = new Mat();
 
-    @Override
-    public Mat processFrame(Mat input) {
-        Core.inRange(input, lowerRGBA, upperRGBA, rgbaBinaryMat);
+	@Override
+	public Mat processFrame(Mat input) {
+		Core.inRange(input, lowerRGBA, upperRGBA, rgbaBinaryMat);
 
-        contours.clear();
-        hierarchy.release();
-        Imgproc.findContours(rgbaBinaryMat, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+		contours.clear();
+		hierarchy.release();
+		Imgproc.findContours(rgbaBinaryMat, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        input.copyTo(inputContours);
-        Imgproc.drawContours(inputContours, contours, -1, lineColor, lineThickness);
+		contoursRotRects.clear();
+		for(MatOfPoint points : contours) {
+			contours2f.release();
+			points.convertTo(contours2f, CvType.CV_32F);
 
-        filteredRectangleContours.clear();
-        for(MatOfPoint contour : contours) {
-            contour.convertTo(contours2f, CvType.CV_32FC2);
+			contoursRotRects.add(Imgproc.minAreaRect(contours2f));
+		}
 
-            Imgproc.approxPolyDP(contours2f, approxPolyDp2f, ((100.0 - 100) / 100.0) * Imgproc.arcLength(contours2f, true), true);
-            approxPolyDp2f.convertTo(approxPolyDp, CvType.CV_32S);
+		input.copyTo(inputRotRects);
+		for(RotatedRect rect : contoursRotRects) {
+			if(rect != null) {
+				Point[] rectPoints = new Point[4];
+				rect.points(rectPoints);
+				MatOfPoint matOfPoint = new MatOfPoint(rectPoints);
 
-            if(approxPolyDp.size().height == 4) {
-                filteredRectangleContours.add(contour);
-            }
+				Imgproc.polylines(inputRotRects, Collections.singletonList(matOfPoint), true, lineColor, lineThickness);
+			}
+		}
 
-            contours2f.release();
-            approxPolyDp.release();
-            approxPolyDp2f.release();
-        }
-
-        return inputContours;
-    }
+		return inputRotRects;
+	}
 }
