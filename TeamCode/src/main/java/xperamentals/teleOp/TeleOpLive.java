@@ -48,6 +48,7 @@ public class TeleOpLive extends OpMode {
     public static double p = 0.004, i = 0, d = 0.00001;
     public static int target = 0;
     private PIDController controller;
+    private static Pose homePose = new Pose(8.8,9,Math.toRadians(0));
 
     private servoController claw;
     private double rotate = 0.0;
@@ -175,6 +176,13 @@ public class TeleOpLive extends OpMode {
                             .whenHeld(new lowerClaw(intake));
             toolOp.getGamepadButton(GamepadKeys.Button.Y)
                             .whenInactive(new raseClaw(intake));
+            if (gamepad1.a) {
+                //follower.setCurrentPoseWithOffset(homePose);
+                follower.setPose(homePose);
+            }
+            toolOp.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                            .whenPressed(new resetEncoder(slide));
+
             //specimen claw controls
 
             //arm controls
@@ -198,7 +206,7 @@ public class TeleOpLive extends OpMode {
 
         /* Telemetry Outputs*/
         telemetry.addData("pathState:",pathState);
-        claw.servoTelemetry(telemetry);
+        //claw.servoTelemetry(telemetry);
         telemetry.addData("rotate",rotate);
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
@@ -214,11 +222,11 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void stop() {
-        ElapsedTime time = new ElapsedTime();
-        target = 0;
-        if(time.equals(5)){
-            target = 0;
-        }
+       // ElapsedTime time = new ElapsedTime();
+        //target = 0;
+       // if(time.equals(5)){
+        //    target = 0;
+       // }
 
     }
 }

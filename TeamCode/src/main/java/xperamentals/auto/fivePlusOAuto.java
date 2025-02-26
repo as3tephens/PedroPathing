@@ -42,13 +42,12 @@ public class fivePlusOAuto extends OpMode {
     private int pathState;
 //    private servoController servo;
 //    private slideControler slides;
-    private final Pose startPose = new Pose(135.8,78.6,Math.toRadians(90));
+    private final Pose startPose = new Pose(135.3,80.8,Math.toRadians(90));
     public static PathBuilder builder = new PathBuilder();
-
     public static PathChain line1 = builder
             .addPath(
                     new BezierLine(
-                            new Point(135.800, 78.600, Point.CARTESIAN),
+                            new Point(135.300, 80.800, Point.CARTESIAN),
                             new Point(124.948, 77.095, Point.CARTESIAN)
                     )
             )
@@ -69,7 +68,7 @@ public class fivePlusOAuto extends OpMode {
             .addPath(
                     new BezierLine(
                             new Point(113.700, 75.600, Point.CARTESIAN),
-                            new Point(104.345, 66.462, Point.CARTESIAN)
+                            new Point(104.000, 66.800, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -78,7 +77,7 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line4 = builder
             .addPath(
                     new BezierCurve(
-                            new Point(104.345, 66.462, Point.CARTESIAN),
+                            new Point(104.000, 66.800, Point.CARTESIAN),
                             new Point(130.043, 96.591, Point.CARTESIAN),
                             new Point(110.200, 105.900, Point.CARTESIAN)
                     )
@@ -100,7 +99,7 @@ public class fivePlusOAuto extends OpMode {
             .addPath(
                     new BezierLine(
                             new Point(86.000, 108.200, Point.CARTESIAN),
-                            new Point(86.000, 119.500, Point.CARTESIAN)
+                            new Point(86.467, 117.062, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -109,8 +108,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line7 = builder
             .addPath(
                     new BezierLine(
-                            new Point(86.000, 119.500, Point.CARTESIAN),
-                            new Point(134.300, 119.700, Point.CARTESIAN)
+                            new Point(86.467, 117.062, Point.CARTESIAN),
+                            new Point(130.000, 118.800, Point.CARTESIAN)
                     )
             )
             .setTangentHeadingInterpolation()
@@ -119,9 +118,9 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line8 = builder
             .addPath(
                     new BezierCurve(
-                            new Point(134.300, 119.700, Point.CARTESIAN),
-                            new Point(84.185, 102.794, Point.CARTESIAN),
-                            new Point(85.957, 129.378, Point.CARTESIAN)
+                            new Point(130.000, 118.800, Point.CARTESIAN),
+                            new Point(69.506, 106.420, Point.CARTESIAN),
+                            new Point(85.957, 126.000, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -130,8 +129,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line9 = builder
             .addPath(
                     new BezierLine(
-                            new Point(85.957, 129.378, Point.CARTESIAN),
-                            new Point(134.300, 130.000, Point.CARTESIAN)
+                            new Point(85.957, 126.000, Point.CARTESIAN),
+                            new Point(130.000, 126.000, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -140,9 +139,9 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line10 = builder
             .addPath(
                     new BezierCurve(
-                            new Point(134.300, 130.000, Point.CARTESIAN),
+                            new Point(130.000, 126.000, Point.CARTESIAN),
                             new Point(93.711, 112.763, Point.CARTESIAN),
-                            new Point(85.200, 135.500, Point.CARTESIAN)
+                            new Point(84.900, 134.700, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -151,8 +150,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line11 = builder
             .addPath(
                     new BezierLine(
-                            new Point(85.200, 135.500, Point.CARTESIAN),
-                            new Point(134.300, 135.800, Point.CARTESIAN)
+                            new Point(84.900, 134.700, Point.CARTESIAN),
+                            new Point(130.000, 134.700, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -161,8 +160,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line12 = builder
             .addPath(
                     new BezierLine(
-                            new Point(134.300, 135.800, Point.CARTESIAN),
-                            new Point(103.680, 70.006, Point.CARTESIAN)
+                            new Point(130.000, 134.700, Point.CARTESIAN),
+                            new Point(103.600, 68.900, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -171,8 +170,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line13 = builder
             .addPath(
                     new BezierLine(
-                            new Point(103.680, 70.006, Point.CARTESIAN),
-                            new Point(133.000, 118.800, Point.CARTESIAN)
+                            new Point(103.600, 68.900, Point.CARTESIAN),
+                            new Point(134.200, 118.800, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -181,8 +180,8 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line14 = builder
             .addPath(
                     new BezierLine(
-                            new Point(133.000, 118.800, Point.CARTESIAN),
-                            new Point(103.680, 74.437, Point.CARTESIAN)
+                            new Point(134.200, 118.800, Point.CARTESIAN),
+                            new Point(103.680, 71.000, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -191,7 +190,7 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line15 = builder
             .addPath(
                     new BezierLine(
-                            new Point(103.680, 74.437, Point.CARTESIAN),
+                            new Point(103.680, 71.000, Point.CARTESIAN),
                             new Point(133.000, 118.800, Point.CARTESIAN)
                     )
             )
@@ -202,7 +201,7 @@ public class fivePlusOAuto extends OpMode {
             .addPath(
                     new BezierLine(
                             new Point(133.000, 118.800, Point.CARTESIAN),
-                            new Point(103.680, 78.425, Point.CARTESIAN)
+                            new Point(103.680, 73.000, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -211,7 +210,7 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line17 = builder
             .addPath(
                     new BezierLine(
-                            new Point(103.680, 78.425, Point.CARTESIAN),
+                            new Point(103.680, 73.000, Point.CARTESIAN),
                             new Point(133.000, 118.800, Point.CARTESIAN)
                     )
             )
@@ -222,7 +221,7 @@ public class fivePlusOAuto extends OpMode {
             .addPath(
                     new BezierLine(
                             new Point(133.000, 118.800, Point.CARTESIAN),
-                            new Point(103.680, 81.969, Point.CARTESIAN)
+                            new Point(103.680, 75.100, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -231,7 +230,7 @@ public class fivePlusOAuto extends OpMode {
     public static PathChain line19 = builder
             .addPath(
                     new BezierLine(
-                            new Point(103.680, 81.969, Point.CARTESIAN),
+                            new Point(103.680, 75.100, Point.CARTESIAN),
                             new Point(120.800, 102.800, Point.CARTESIAN)
                     )
             )
@@ -383,7 +382,7 @@ public void init_loop(){
     }
     @Override
     public void start(){
-        follower.setMaxPower(0.5);
+        follower.setMaxPower(0.7);
         opmodeTimer.resetTimer();
         setPathState(0);
     }

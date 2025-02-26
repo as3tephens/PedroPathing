@@ -22,8 +22,8 @@ import pedroPathing.constants.LConstants;
 import xperamentals.controller.servoController;
 import xperamentals.controller.slideControler;
 
-@Disabled
-@Autonomous(name = "5 + 0 red")
+
+@Autonomous(name = "robot start pose")
 public class fiveSpecAuto extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -32,7 +32,19 @@ public class fiveSpecAuto extends OpMode{
     public static PathBuilder builder = new PathBuilder();
     private servoController servo;
     private slideControler slides;
-    private final Pose startPose = new Pose(135.836,78.567,Math.toRadians(90));
+    private final Pose startPose = new Pose(135.2,135.6,Math.toRadians(90));
+
+
+
+    public static PathChain line1 = builder
+            .addPath(
+                    new BezierLine(
+                            new Point(135.200, 135.600, Point.CARTESIAN),
+                            new Point(135.300, 80.800, Point.CARTESIAN)
+                    )
+            )
+            .setConstantHeadingInterpolation(Math.toRadians(90))
+            .build();
 
     public static PathChain spec1 = builder
             .addPath(
@@ -205,14 +217,15 @@ public void autonumousPathUpdate(){
     switch(pathSate){
         case 0:
 //servo.armHighChamber();
-            follower.followPath(spec1);
-            setPathState(1);
+            follower.followPath(line1,true);
+            setPathState(01);
+
             break;
         case 1:
             if(!follower.isBusy()) {
                // servo.armClawOpen();
                 //the path is broken up so we can put the arm in
-                follower.followPath(pushSamplesInPart1);
+                follower.followPath(line1);
                 setPathState(3);
                 break;
             }

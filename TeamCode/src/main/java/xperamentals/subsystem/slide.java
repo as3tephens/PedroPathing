@@ -2,6 +2,7 @@ package xperamentals.subsystem;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,6 +20,9 @@ public class slide extends SubsystemBase {
     }
     public void setPower(double power){
         slides.setPower(power);
+    }
+    public void resetSlideEncoder(){
+        slides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void retract(){
         target = 0;

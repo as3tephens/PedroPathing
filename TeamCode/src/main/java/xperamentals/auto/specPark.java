@@ -97,10 +97,10 @@ public class specPark extends OpMode{
                 //servo.armHighChamber();
                 CommandScheduler.getInstance().schedule(new armChamber(arm));
                 follower.followPath(line1);
-                setPathState(1);
+                setPathState(99999);
                 break;
 
-            case 1:
+            case 99999:
                 if(!follower.isBusy())
                 {
                     follower.followPath(line2);
