@@ -293,7 +293,7 @@ public class fivePlusOAuto extends OpMode {
             case 8:
                 if(!follower.isBusy()){
                     follower.followPath(line9);
-                    setPathState(9);
+                    setPathState(11);
                     break;
                 }
             case 9:
