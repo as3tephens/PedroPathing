@@ -233,7 +233,7 @@ public class fourPlusOAuto extends OpMode {
                 }
             case 4:
                 if(!follower.isBusy()){
-                    follower.followPath(line5);
+                    follower.followPath(line5,1,false);
                     setPathState(5);
                     break;
                 }
