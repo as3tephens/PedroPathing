@@ -275,29 +275,34 @@ public class fiourPlusOAuto extends OpMode {
                 }
             case 11:
                 if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
+                    //CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
+                    new closeClawAndArmChamber(arm,claw).schedule();
                     follower.followPath(line12);
                     setPathState(12);
                     break;
                 }
             case 12:
                 if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    //CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    new armWallAndOpenClaw(arm,claw).schedule();
                     follower.followPath(line13,true);
                     setPathState(13);
                     break;
                 }
             case 13:
                 if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    //CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    new closeClawAndArmChamber(arm,claw).schedule();
                     follower.followPath(line14,true);
                     setPathState(14);
                     break;
                 }
             case 14:
                 if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
+                    //CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
+                    new armWallAndOpenClaw(arm,claw).schedule();
                     follower.followPath(line15,true);
+                    new extendSlides(slide).schedule();
                     setPathState(55);
                     break;
                 }
