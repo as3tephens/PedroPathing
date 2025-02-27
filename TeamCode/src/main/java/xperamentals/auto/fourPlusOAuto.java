@@ -34,7 +34,7 @@ import xperamentals.subsystem.intake;
 import xperamentals.subsystem.slide;
 @Config
 @Autonomous(name = "4 + 0")
-public class fiourPlusOAuto extends OpMode {
+public class fourPlusOAuto extends OpMode {
     private Follower follower;
     private CommandScheduler commander;                                                           //Nathan Change
     private xperamentals.subsystem.arm arm;
@@ -328,7 +328,6 @@ public void init_loop(){
         follower.setStartingPose(startPose);
         commander = CommandScheduler.getInstance();                                               //Nathan Change
         commander.run();                                                                          //Nathan Change
-
     }
     @Override
     public void start(){
