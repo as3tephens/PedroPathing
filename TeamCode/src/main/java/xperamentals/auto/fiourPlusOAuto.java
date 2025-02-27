@@ -1,5 +1,6 @@
 package xperamentals.auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ScheduleCommand;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -31,19 +32,22 @@ import xperamentals.subsystem.arm;
 import xperamentals.subsystem.claw;
 import xperamentals.subsystem.intake;
 import xperamentals.subsystem.slide;
-
-@Autonomous(name = "5 + 0")
-public class fivePlusOAuto extends OpMode {
+@Config
+@Autonomous(name = "4 + 0")
+public class fiourPlusOAuto extends OpMode {
     private Follower follower;
+    private CommandScheduler commander;                                                           //Nathan Change
     private xperamentals.subsystem.arm arm;
     private xperamentals.subsystem.claw claw;
     private xperamentals.subsystem.slide slide;
     private Timer pathTimer, actionTimer,opmodeTimer;
+    public static double speed = 0.5;
     private int pathState;
 //    private servoController servo;
 //    private slideControler slides;
     private final Pose startPose = new Pose(135.3,80.8,Math.toRadians(90));
     public static PathBuilder builder = new PathBuilder();
+
     public static PathChain line1 = builder
             .addPath(
                     new BezierLine(
@@ -138,36 +142,15 @@ public class fivePlusOAuto extends OpMode {
 
     public static PathChain line10 = builder
             .addPath(
-                    new BezierCurve(
+                    new BezierLine(
                             new Point(130.000, 126.000, Point.CARTESIAN),
-                            new Point(93.711, 112.763, Point.CARTESIAN),
-                            new Point(84.900, 134.700, Point.CARTESIAN)
-                    )
-            )
-            .setConstantHeadingInterpolation(Math.toRadians(0))
-            .build();
-
-    public static PathChain line11 = builder
-            .addPath(
-                    new BezierLine(
-                            new Point(84.900, 134.700, Point.CARTESIAN),
-                            new Point(130.000, 134.700, Point.CARTESIAN)
-                    )
-            )
-            .setConstantHeadingInterpolation(Math.toRadians(0))
-            .build();
-
-    public static PathChain line12 = builder
-            .addPath(
-                    new BezierLine(
-                            new Point(130.000, 134.700, Point.CARTESIAN),
                             new Point(103.600, 68.900, Point.CARTESIAN)
                     )
             )
             .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
-    public static PathChain line13 = builder
+    public static PathChain line11 = builder
             .addPath(
                     new BezierLine(
                             new Point(103.600, 68.900, Point.CARTESIAN),
@@ -177,7 +160,7 @@ public class fivePlusOAuto extends OpMode {
             .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
-    public static PathChain line14 = builder
+    public static PathChain line12 = builder
             .addPath(
                     new BezierLine(
                             new Point(134.200, 118.800, Point.CARTESIAN),
@@ -187,7 +170,7 @@ public class fivePlusOAuto extends OpMode {
             .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
-    public static PathChain line15 = builder
+    public static PathChain line13 = builder
             .addPath(
                     new BezierLine(
                             new Point(103.680, 71.000, Point.CARTESIAN),
@@ -197,7 +180,7 @@ public class fivePlusOAuto extends OpMode {
             .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
-    public static PathChain line16 = builder
+    public static PathChain line14 = builder
             .addPath(
                     new BezierLine(
                             new Point(133.000, 118.800, Point.CARTESIAN),
@@ -207,30 +190,10 @@ public class fivePlusOAuto extends OpMode {
             .setConstantHeadingInterpolation(Math.toRadians(0))
             .build();
 
-    public static PathChain line17 = builder
+    public static PathChain line15 = builder
             .addPath(
                     new BezierLine(
                             new Point(103.680, 73.000, Point.CARTESIAN),
-                            new Point(133.000, 118.800, Point.CARTESIAN)
-                    )
-            )
-            .setConstantHeadingInterpolation(Math.toRadians(0))
-            .build();
-
-    public static PathChain line18 = builder
-            .addPath(
-                    new BezierLine(
-                            new Point(133.000, 118.800, Point.CARTESIAN),
-                            new Point(103.680, 75.100, Point.CARTESIAN)
-                    )
-            )
-            .setConstantHeadingInterpolation(Math.toRadians(0))
-            .build();
-
-    public static PathChain line19 = builder
-            .addPath(
-                    new BezierLine(
-                            new Point(103.680, 75.100, Point.CARTESIAN),
                             new Point(120.800, 102.800, Point.CARTESIAN)
                     )
             )
@@ -243,25 +206,27 @@ public class fivePlusOAuto extends OpMode {
     public void autonumousPathUpdate(){
         switch(pathState){
             case 0:
+                new armChamber(arm).schedule();
                 follower.followPath(line1);
                 setPathState(1);
                 break;
             case 1:
                 if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new armChamber(arm));
+
                     follower.followPath(line2);
                     setPathState(2);
                     break;
                 }
             case 2:
                 if(!follower.isBusy()){
-                    follower.followPath(line3,true);
+                    follower.followPath(line3);
                     setPathState(3);
                     break;
                 }
             case 3:
                 if(!follower.isBusy()) {
-                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    //CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm,claw));
+                    new armWallAndOpenClaw(arm,claw).schedule();
                     follower.followPath(line4);
                     setPathState(4);
                     break;
@@ -296,7 +261,7 @@ public class fivePlusOAuto extends OpMode {
                     setPathState(11);
                     break;
                 }
-            case 9:
+           case 9:
                 if(!follower.isBusy()){
                     follower.followPath(line10);
                     setPathState(10);
@@ -333,56 +298,36 @@ public class fivePlusOAuto extends OpMode {
                 if(!follower.isBusy()){
                     CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
                     follower.followPath(line15,true);
-                    setPathState(15);
+                    setPathState(55);
                     break;
-                }
-            case 15:
-                if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm, claw));
-                    follower.followPath(line16,true);
-                    setPathState(16);
-                    break;
-                }
-            case 16:
-                if(!follower.isBusy()) {
-                    CommandScheduler.getInstance().schedule(new closeClawAndArmChamber(arm,claw));
-                    follower.followPath(line17, true);
-                    setPathState(17);
-                    break;
-                }
-            case 17:
-                if(!follower.isBusy()){
-                    follower.followPath(line18,true);
-                }
-            case 18:
-                if(!follower.isBusy()){
-                    CommandScheduler.getInstance().schedule(new armWallAndOpenClaw(arm, claw));
-                    follower.followPath(line19,true);
-                    CommandScheduler.getInstance().schedule(new extendSlides(slide));
                 }
         }
     }
+
 @Override
 public void init_loop(){
-        CommandScheduler.getInstance().run();
+       // CommandScheduler.getInstance().run();                                                     //Nathan Change
 }
     @Override
     public void init() {
         arm = new arm(hardwareMap,"cliper");
         slide = new slide(hardwareMap,"extender");
         claw = new claw(hardwareMap,"clawer");
-        CommandScheduler.getInstance().schedule(new armClawClose(claw));
+        //CommandScheduler.getInstance().schedule(new armClawClose(claw));
+        new armClawClose(claw).schedule();
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+        commander = CommandScheduler.getInstance();                                               //Nathan Change
+        commander.run();                                                                          //Nathan Change
 
     }
     @Override
     public void start(){
-        follower.setMaxPower(0.7);
+        follower.setMaxPower(speed);
         opmodeTimer.resetTimer();
         setPathState(0);
     }
@@ -392,6 +337,7 @@ public void init_loop(){
         follower.update();
         autonumousPathUpdate();
         CommandScheduler.getInstance().run();
+        commander.run();
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

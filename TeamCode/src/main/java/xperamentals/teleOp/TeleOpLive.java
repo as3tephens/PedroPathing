@@ -26,6 +26,7 @@ import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import xperamentals.command.commands.*;
@@ -54,6 +55,10 @@ public class TeleOpLive extends OpMode {
     private double rotate = 0.0;
     private static int mode = 0;
     private arm arm;
+    private DcMotor BL;
+    private DcMotor BR;
+    private DcMotor FL;
+    private DcMotor FR;
     private claw claws;
     private GamepadEx toolOp;
     private intake intake;
@@ -115,6 +120,19 @@ public class TeleOpLive extends OpMode {
      **/
     @Override
     public void init() {
+        BL = hardwareMap.get(DcMotor.class, "BL");
+        BR = hardwareMap.get(DcMotor.class, "BR");
+        FL = hardwareMap.get(DcMotor.class, "FL");
+        FR = hardwareMap.get(DcMotor.class, "FR");
+
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        BL.setDirection(DcMotor.Direction.REVERSE);
+        FL.setDirection(DcMotor.Direction.REVERSE);
+
         slide = new slide(hardwareMap,"mane");
         arm = new arm(hardwareMap,"sld");
         toolOp = new GamepadEx(gamepad2);
@@ -160,11 +178,11 @@ public class TeleOpLive extends OpMode {
         - Robot-Centric Mode: true
         */
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+       // follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         //follower.setMaxPower(0.5);
 
 
-        follower.update();
+        //follower.update();
 
         //driver 2 controls
             //intake claw controls
@@ -182,21 +200,33 @@ public class TeleOpLive extends OpMode {
             }
             toolOp.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                             .whenPressed(new resetEncoder(slide));
+        toolOp.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .whenPressed(new armClawClose(claws));
 
             //specimen claw controls
 
             //arm controls
             toolOp.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                    .whenPressed(new closeClawAndArmChamber(arm,claws));
+                    .whenPressed(new /*closeClawAndArmChamber(arm,claws)*/armChamber(arm));
             toolOp.getGamepadButton((GamepadKeys.Button.DPAD_UP))
                             .whenActive(new armWall(arm));
-
+            toolOp.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                            .whenPressed(new armClawOpen(claws));
             toolOp.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                    .whenPressed(new armWallAndOpenClaw(arm,claws));
+                    .whenPressed(new /*armWallAndOpenClaw(arm,claws)*/ armWall(arm));
             toolOp.getGamepadButton(GamepadKeys.Button.A)
                     .whenPressed(new extendSlides(slide));
             toolOp.getGamepadButton(GamepadKeys.Button.X)
                     .whenPressed(new retractSlides(slide));
+        double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+        double x = gamepad1.left_stick_x;
+        double rx = gamepad1.right_stick_x;
+
+        FL.setPower(y + x + rx);
+        BL.setPower(y - x + rx);
+        FR.setPower(y - x - rx);
+        BR.setPower(y + x - rx);
+
 
         /**auto place spec on high chamber*/
        // if (gamepad1.b){

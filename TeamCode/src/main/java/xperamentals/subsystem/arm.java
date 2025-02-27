@@ -1,5 +1,6 @@
 package xperamentals.subsystem;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -7,11 +8,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+@Config
 
 public class arm extends SubsystemBase {
     private Servo armPitchR;
     private Telemetry telemetry;
     private Servo armPitchL;
+    public static double angleWall = 35;
+    public static double angleChamber = 190;
     private Servo release;
 
     public arm(HardwareMap hMap, String name){
@@ -21,12 +25,12 @@ public class arm extends SubsystemBase {
         armPitchR.setDirection(Servo.Direction.REVERSE);
     }
     public void armC(){
-        armPitchR.setPosition((double) 190 /270);
-        armPitchL.setPosition((double) 190 /270);
+        armPitchR.setPosition((double) angleChamber /270);
+        armPitchL.setPosition((double) angleChamber /270);
     }
     public void armW(){
-        armPitchR.setPosition((double) 35 /270);
-        armPitchL.setPosition((double) 35 /270);
+        armPitchR.setPosition((double) angleWall /270);
+        armPitchL.setPosition((double) angleWall /270);
     }
     public void nuteral(){
         release.setPosition(0.5);
