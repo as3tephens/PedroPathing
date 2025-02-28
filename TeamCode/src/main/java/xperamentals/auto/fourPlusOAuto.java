@@ -3,6 +3,7 @@ package xperamentals.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ScheduleCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -206,7 +207,23 @@ public class fourPlusOAuto extends OpMode {
     public void autonumousPathUpdate(){
         switch(pathState){
             case 0:
-                new armChamber(arm).schedule();
+                //new armChamber(arm).schedule();
+                new SequentialCommandGroup(
+                        new armChamber(arm),
+                        ///sleep
+                        new armWallAndOpenClaw(arm,claw),
+                        ///sleep
+                        new closeClawAndArmChamber(arm,claw),
+                        ///sleep
+                        new armWallAndOpenClaw(arm,claw),
+                        ///sleep
+                        new closeClawAndArmChamber(arm,claw),
+                        ///sleep
+                        new armWallAndOpenClaw(arm,claw),
+                        ///sleep
+                        new closeClawAndArmChamber(arm,claw),
+                        new armWallAndOpenClaw(arm,claw)
+                ).schedule();
                 follower.followPath(line1);
                 setPathState(1);
                 break;
